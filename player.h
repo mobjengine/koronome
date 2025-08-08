@@ -20,22 +20,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <SDL.h>
 
-#ifdef M_PI
-#undef M_PI
-#define M_PI (3.141592657)
-#endif
-#define DEG_TO_RAD(deg) ((deg) * (M_PI / 180.0f))
-#define RAD_TO_DEG(rad) ((rad) * (180.0f / M_PI))
-#define TAU (2.0f * M_PI)
-#define SCREEN_WIDTH (320)
-#define SCREEN_HEIGHT (200)
+#define PLAYER_ROT_SPEED 1.0f
+#define PLAYER_MOVE_SPEED 1.0f
 
 typedef struct {
-    Uint64 now;
-    Uint64 last;
-    float time;
-} delta_t;
+    SDL_FPoint position;
+    float angle; // rad
+} player_t;
 
-extern SDL_Renderer *renderer;
-extern const Uint8 *keyboard;
-extern delta_t delta;
+extern player_t player;
+
+void player_init();
+void player_process();
+void player_render();

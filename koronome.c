@@ -18,15 +18,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <SDL.h>
 #include "koronome.h"
+#include "player.h"
+
+SDL_Renderer *renderer;
+const Uint8 *keyboard;
+delta_t delta;
 
 int main(int argc, const char **argv) {
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow("KORONOME", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    keyboard = SDL_GetKeyboardState(NULL);
     SDL_Event event;
     SDL_bool quit = SDL_FALSE;
-    
+    memset(&delta, 0, sizeof(delta_t));
+    delta.now = SDL_GetPerformanceCounter(),
+    player_init();
+
     do {
+        delta.last = delta.now;
+        delta.now = SDL_GetPerformanceCounter();
+        delta.time = (float)((delta.now - delta.last)*1000 / (float)SDL_GetPerformanceFrequency());
+
         while(SDL_PollEvent(&event)) {
             switch(event.type) {
                 case SDL_QUIT:
@@ -35,6 +49,11 @@ int main(int argc, const char **argv) {
             }
         }
 
+        player_process();
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+        player_render();
         SDL_RenderPresent(renderer);
     } while(!quit);
 

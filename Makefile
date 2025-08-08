@@ -3,7 +3,8 @@ CFLAGS	=	-std=gnu89 -Wall -Werror $(shell pkg-config --cflags sdl2)
 LIBS	=	$(shell pkg-config --libs sdl2)
 EXE	=	koronome
 OBJS	=	\
-	koronome.o
+	koronome.o	\
+	player.o
 
 all:	$(EXE)
 
