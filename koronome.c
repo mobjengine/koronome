@@ -21,23 +21,43 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "player.h"
 #include "world.h"
 #include "ray.h"
+#include "wad.h"
 
 SDL_Renderer *renderer;
 const Uint8 *keyboard;
 delta_t delta;
+SDL_Palette *playpal;
 
 int main(int argc, const char **argv) {
+    wad_init();
+
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow("KORONOME", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     keyboard = SDL_GetKeyboardState(NULL);
-    SDL_Event event;
-    SDL_bool quit = SDL_FALSE;
-    memset(&delta, 0, sizeof(delta_t));
-    delta.now = SDL_GetPerformanceCounter(),
+
+    /*Loading playpal*/ {
+        lump_t *l = wad_get("PLAYPAL");
+        Uint8 p[l->size];
+        wad_data(l, p);
+
+        SDL_Color colors[256];
+        int ci = 0;
+        for (int i = 0; i + 2 < l->size; i += 3) {
+            memcpy(&colors[ci], &p[i], 3);
+            colors[ci++].a = 255;
+        }
+        playpal = SDL_AllocPalette(256);
+        SDL_SetPaletteColors(playpal, colors, 0, 256);
+    }
+    
     player_init();
 
+    memset(&delta, 0, sizeof(delta_t));
+    delta.now = SDL_GetPerformanceCounter();
+    SDL_Event event;
+    SDL_bool quit = SDL_FALSE;
     do {
         delta.last = delta.now;
         delta.now = SDL_GetPerformanceCounter();
@@ -61,9 +81,13 @@ int main(int argc, const char **argv) {
         SDL_RenderPresent(renderer);
     } while(!quit);
 
+    SDL_FreePalette(playpal);
+
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+    
+    wad_shutdown();
 
     return 0;
 }
