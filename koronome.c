@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "koronome.h"
 #include "player.h"
 #include "world.h"
+#include "ray.h"
 
 SDL_Renderer *renderer;
 const Uint8 *keyboard;
@@ -54,6 +55,7 @@ int main(int argc, const char **argv) {
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+        raycast();
         world_render();
         player_render();
         SDL_RenderPresent(renderer);
@@ -64,4 +66,19 @@ int main(int argc, const char **argv) {
     SDL_Quit();
 
     return 0;
+}
+
+void draw_wall_slice(int x, float wallHeight, float sliceWidth) {
+    int startY = (SCREEN_HEIGHT / 2) - (wallHeight / 2);
+    if (startY < 0) startY = 0;
+
+    SDL_Rect rect = {
+        .x = x * (int)sliceWidth,
+        .y = startY,
+        .w = (int)sliceWidth,
+        .h = wallHeight
+    };
+
+    SDL_SetRenderDrawColor(renderer, 180, 0, 180, 255);
+    SDL_RenderFillRect(renderer, &rect);
 }

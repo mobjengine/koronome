@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 typedef struct {
     SDL_FPoint position;
     float angle;
+    float fov;
 } player_t;
 
 extern player_t player;

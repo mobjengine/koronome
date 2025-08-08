@@ -23,8 +23,9 @@ player_t player;
 
 void player_init() {
     memset(&player, 0, sizeof(player_t));
-    player.position = (SDL_FPoint){3.5,3.5};
-    player.angle = DEG_TO_RAD(270.0f);
+    player.position = (SDL_FPoint){3.5f,3.5f};
+    player.angle = DEG_TO_RAD(90.0f);
+    player.fov = M_PI / 3.0f;
 }
 
 void player_process() {
@@ -55,8 +56,8 @@ void player_render() {
     SDL_Surface *s = SDL_LoadBMP("p.bmp");
     SDL_Texture *t = SDL_CreateTextureFromSurface(renderer, s);
     SDL_FRect dstrect = {
-        player.position.x,
-        player.position.y,
+        player.position.x * 8 - 8 / 2,
+        player.position.y * 8 - 8 / 2,
         8,
         8
     };

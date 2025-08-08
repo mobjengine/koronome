@@ -5,7 +5,8 @@ EXE	=	koronome
 OBJS	=	\
 	koronome.o	\
 	player.o	\
-	world.o
+	world.o	\
+	ray.o
 
 all:	$(EXE)
 
