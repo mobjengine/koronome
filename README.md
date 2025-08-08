@@ -1,2 +1,3 @@
 # koronome
-A raycasting video game.
+
+A raycasting-ryona video game.
