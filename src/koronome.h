@@ -1,5 +1,5 @@
 /*
-A raycasting-ryona video game.
+An isometric game
 Copyright (C) 2025  mobjengine
 
 This program is free software: you can redistribute it and/or modify

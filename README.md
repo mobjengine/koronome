@@ -1,3 +1,3 @@
 # koronome
 
-A raycasting-ryona video game.
+An isometric game.
