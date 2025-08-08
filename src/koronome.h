@@ -37,3 +37,7 @@ extern const Uint8 *keyboard;
 extern delta_t delta;
 
 SDL_Surface* K_CreateSurfaceFromMemory(const void* data, size_t size);
+void K_RenderIsometricTile(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y);
+void DrawTextureAsIsometricTileWithPerspective(SDL_Renderer* renderer, SDL_Texture* texture, 
+                                             int screenX, int screenY, int tileWidth, int tileHeight, 
+                                             float perspectiveFactor);
