@@ -16,36 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "player.h"
+#include "koronome.h"
 
-#include <SDL.h>
-#include "vec.h"
-#include "map.h"
+player_t player;
 
-typedef struct {
-    Sint8   identification;
-    Sint32  numlumps;
-    Sint32  infotableofs;
-} wadinfo_t;
+void player_init() {
+    memset(&player, 0, sizeof(player_t));
+    player.position = (SDL_FPoint){3.5f,3.5f};
+}
 
-typedef struct {
-    Sint32  filepos;
-    Sint32  size;
-    Sint8   name[8];
-} filelump_t;
+void player_process() {
+    return;
+}
 
-typedef struct {
-    Sint32  filepos;
-    Sint32  size;
-    Uint8   wad;
-} lump_t;
-
-typedef map_t(lump_t) map_lump_t;
-
-extern vec_str_t wads;
-extern map_lump_t lumps;
-
-void wad_init();
-void wad_shutdown();
-lump_t* wad_get(const char *name);
-void wad_data(lump_t *lump, void *buffer);
+void player_render() {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawPoint(renderer, player.position.x, player.position.y);
+}

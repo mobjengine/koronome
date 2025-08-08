@@ -21,13 +21,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <SDL.h>
 
 typedef struct {
-    float distance;
-    float wallheight;
-    SDL_bool side;
-    float perpDist;
-    int stepX;
-    int stepY;
-} ray_t;
+    SDL_FPoint position;
+} player_t;
 
-ray_t castray(float angle);
-void raycast(SDL_Surface *surface);
+extern player_t player;
+
+void player_init();
+void player_process();
+void player_render();

@@ -20,9 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <SDL_image.h>
 #include "koronome.h"
 #include "player.h"
-#include "world.h"
-#include "ray.h"
-#include "wad.h"
+#include "lump.h"
 
 SDL_Renderer *renderer;
 const Uint8 *keyboard;
@@ -30,7 +28,7 @@ delta_t delta;
 SDL_Palette *playpal;
 
 int main(int argc, const char **argv) {
-    wad_init();
+    lump_init(argc, argv);
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow("KORONOME", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
@@ -39,9 +37,9 @@ int main(int argc, const char **argv) {
     keyboard = SDL_GetKeyboardState(NULL);
 
     /*Loading playpal*/ {
-        lump_t *l = wad_get("PLAYPAL");
+        lump_t *l = lump_get("playpal.pal");
         Uint8 p[l->size];
-        wad_data(l, p);
+        lump_data(l, p);
 
         SDL_Color colors[256];
         int ci = 0;
@@ -53,15 +51,6 @@ int main(int argc, const char **argv) {
         SDL_SetPaletteColors(playpal, colors, 0, 256);
     }
 
-    /*Loading BRICK*/
-    SDL_Surface *BRICK; {
-        lump_t *l = wad_get("BRICK");
-        Uint8 f[l->size];
-        wad_data(l, f);
-
-        BRICK = K_CreateSurfaceFromMemory(f, l->size);
-    }
-    
     player_init();
 
     memset(&delta, 0, sizeof(delta_t));
@@ -85,53 +74,18 @@ int main(int argc, const char **argv) {
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        raycast(BRICK);
-        world_render();
         player_render();
         SDL_RenderPresent(renderer);
     } while(!quit);
 
     SDL_FreePalette(playpal);
-
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
     
-    wad_shutdown();
+    lump_shutdown();
 
-    return 0;
-}
-
-void draw_wall_slice(int x, float wallHeight, float sliceWidth, SDL_Surface *surface, int texX) {
-    int startY = (SCREEN_HEIGHT / 2) - (int)(wallHeight / 2);
-    if (startY < 0) startY = 0;
-    int endY = startY + (int)wallHeight;
-    if (endY > SCREEN_HEIGHT) endY = SCREEN_HEIGHT;
-
-    int texWidth = surface->w;
-    int texHeight = surface->h;
-
-    if (texX < 0) texX = 0;
-    if (texX >= texWidth) texX = texWidth - 1;
-
-    Uint8 *pixels = (Uint8 *)surface->pixels;
-    SDL_Palette *palette = surface->format->palette;
-
-    for (int y = startY; y < endY; y++) {
-        int d = (y - startY) * texHeight / (int)wallHeight;
-        int texY = d;
-
-        if (texY < 0) texY = 0;
-        if (texY >= texHeight) texY = texHeight - 1;
-
-        Uint8 pixel_index = pixels[texY * surface->pitch + texX];
-        SDL_Color color = palette->colors[pixel_index];
-
-        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
-
-        SDL_Rect pixelRect = { x, y, (int)sliceWidth, 1 };
-        SDL_RenderFillRect(renderer, &pixelRect);
-    }
+    return EXIT_SUCCESS;
 }
 
 SDL_Surface* K_CreateSurfaceFromMemory(const void* data, size_t size) {

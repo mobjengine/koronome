@@ -20,13 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <SDL.h>
 
-#ifdef M_PI
-#undef M_PI
-#define M_PI (3.141592657)
-#endif
-#define DEG_TO_RAD(deg) ((deg) * (M_PI / 180.0f))
-#define RAD_TO_DEG(rad) ((rad) * (180.0f / M_PI))
-#define TAU (2.0f * M_PI)
+#define CSTR_ENDS_WITH(str, suffix) \
+    (strlen(str) >= strlen(suffix) && \
+     strcmp((str) + strlen(str) - strlen(suffix), (suffix)) == 0)
 #define SCREEN_WIDTH (320)
 #define SCREEN_HEIGHT (200)
 
@@ -40,5 +36,4 @@ extern SDL_Renderer *renderer;
 extern const Uint8 *keyboard;
 extern delta_t delta;
 
-void draw_wall_slice(int x, float wallHeight, float sliceWidth, SDL_Surface *surface, int texX);
 SDL_Surface* K_CreateSurfaceFromMemory(const void* data, size_t size);

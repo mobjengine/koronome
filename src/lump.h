@@ -19,10 +19,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
 
 #include <SDL.h>
+#include <zip.h>
+#include "rxi/vec.h"
+#include "rxi/map.h"
 
-#define WORLD_WIDTH (7)
-#define WORLD_HEIGHT (6)
+typedef struct {
+    zip_uint64_t index;
+    zip_uint64_t size;
+    Uint8 zip;
+} lump_t;
 
-extern Uint8 world[WORLD_WIDTH * WORLD_HEIGHT];
+typedef map_t(lump_t) map_lump_t;
 
-void world_render();
+extern vec_str_t zips;
+extern map_lump_t lumps;
+
+void lump_init();
+void lump_shutdown();
+lump_t* lump_get(const char *name);
+void lump_data(lump_t *lump, void *buffer);
