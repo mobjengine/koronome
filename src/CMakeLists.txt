@@ -2,9 +2,10 @@ add_subdirectory(rxi)
 
 add_executable(
     koronome
-    koronome.c
-    player.c
-    lump.c
+    k_main.c
+    k_player.c
+    k_lump.c
+    k_world.c
 )
 set_target_properties(
     koronome PROPERTIES

@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "lump.h"
-#include "koronome.h"
+#include "k_lump.h"
+#include "k_main.h"
 
 vec_str_t zips;
 map_lump_t lumps;

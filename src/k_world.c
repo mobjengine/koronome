@@ -16,21 +16,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "player.h"
-#include "koronome.h"
+#include "k_world.h"
+#include "k_main.h"
 
-player_t player;
+Uint8 world[WORLD_WIDTH * WORLD_HEIGHT];
 
-void player_init() {
-    memset(&player, 0, sizeof(player_t));
-    player.position = (SDL_FPoint){3.5f,3.5f};
+void K_WorldInit() {
+    memset(world, 0, sizeof(world));
 }
 
-void player_process() {
-    return;
-}
-
-void player_render() {
+void K_WorldRender2D() {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderDrawPoint(renderer, player.position.x, player.position.y);
+    for(int x = 0;x < WORLD_WIDTH;x++) {
+        for(int y = 0;y < WORLD_HEIGHT;y++) {
+            if(world[INDEX_2D_TO_1D(x, y, WORLD_WIDTH)]) {
+                SDL_Rect rect = {x*8,y*8,8,8};
+                SDL_RenderFillRect(renderer, &rect);
+            }
+        }
+    }
 }

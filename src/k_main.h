@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define CSTR_ENDS_WITH(str, suffix) \
     (strlen(str) >= strlen(suffix) && \
      strcmp((str) + strlen(str) - strlen(suffix), (suffix)) == 0)
+#define INDEX_2D_TO_1D(x, y, width) ((x) + (y) * (width))
 #define SCREEN_WIDTH (320)
 #define SCREEN_HEIGHT (200)
 
