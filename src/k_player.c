@@ -30,7 +30,7 @@ void K_PlayerProcess() {
     return;
 }
 
-void K_PlayerRender2D() {
+void K_PlayerRender() {
     SDL_FPoint p = {player.position.x * 8, player.position.y * 8};
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderDrawPoint(renderer, p.x, p.y);

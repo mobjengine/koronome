@@ -24,8 +24,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     (strlen(str) >= strlen(suffix) && \
      strcmp((str) + strlen(str) - strlen(suffix), (suffix)) == 0)
 #define INDEX_2D_TO_1D(x, y, width) ((x) + (y) * (width))
+#define M_PI (3.141592657)
+#define DEG_TO_RAD(deg) ((deg) * (M_PI / 180.0f))
+#define RAD_TO_DEG(rad) ((rad) * (180.0f / M_PI))
 #define SCREEN_WIDTH (320)
 #define SCREEN_HEIGHT (200)
+#define TILE_SIZE (8)
+#define TEXTURE_SIZE (64)
 
 typedef struct {
     Uint64 now;
