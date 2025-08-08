@@ -28,4 +28,4 @@ extern player_t player;
 
 void K_PlayerInit();
 void K_PlayerProcess();
-void K_PlayerRender();
+void K_PlayerRender2D();

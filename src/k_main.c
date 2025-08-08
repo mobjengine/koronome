@@ -53,6 +53,40 @@ int main(int argc, const char **argv) {
     }
 
     K_WorldInit();
+    
+    world[INDEX_2D_TO_1D(0, 0, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(1, 0, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(2, 0, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(3, 0, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(4, 0, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(5, 0, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(6, 0, WORLD_WIDTH)] = SDL_TRUE;
+
+    world[INDEX_2D_TO_1D(0, 5, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(1, 5, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(2, 5, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(3, 5, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(4, 5, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(5, 5, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(6, 5, WORLD_WIDTH)] = SDL_TRUE;
+
+    world[INDEX_2D_TO_1D(0, 1, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(0, 2, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(0, 3, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(0, 4, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(0, 5, WORLD_WIDTH)] = SDL_TRUE;
+
+    world[INDEX_2D_TO_1D(6, 1, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(6, 2, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(6, 3, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(6, 4, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(6, 5, WORLD_WIDTH)] = SDL_TRUE;
+
+    world[INDEX_2D_TO_1D(2, 2, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(3, 2, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(4, 2, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(2, 3, WORLD_WIDTH)] = SDL_TRUE;
+    world[INDEX_2D_TO_1D(4, 3, WORLD_WIDTH)] = SDL_TRUE;
 
     K_PlayerInit();
 
@@ -78,7 +112,7 @@ int main(int argc, const char **argv) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         K_WorldRender2D();
-        K_PlayerRender();
+        K_PlayerRender2D();
         SDL_RenderPresent(renderer);
     } while(!quit);
 
