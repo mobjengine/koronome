@@ -26,6 +26,6 @@ typedef struct {
 
 extern player_t player;
 
-void player_init();
-void player_process();
-void player_render();
+void K_PlayerInit();
+void K_PlayerProcess();
+void K_PlayerRender();

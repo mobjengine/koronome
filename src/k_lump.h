@@ -34,7 +34,7 @@ typedef map_t(lump_t) map_lump_t;
 extern vec_str_t zips;
 extern map_lump_t lumps;
 
-void lump_init();
-void lump_shutdown();
-lump_t* lump_get(const char *name);
-void lump_data(lump_t *lump, void *buffer);
+void K_LumpInit();
+void K_LumpShutdown();
+lump_t* K_LumpGet(const char *name);
+void K_LumpData(lump_t *lump, void *buffer);

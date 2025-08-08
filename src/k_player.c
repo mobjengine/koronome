@@ -21,16 +21,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 player_t player;
 
-void player_init() {
+void K_PlayerInit() {
     memset(&player, 0, sizeof(player_t));
     player.position = (SDL_FPoint){3.5f,3.5f};
 }
 
-void player_process() {
+void K_PlayerProcess() {
     return;
 }
 
-void player_render() {
+void K_PlayerRender() {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderDrawPoint(renderer, player.position.x, player.position.y);
 }

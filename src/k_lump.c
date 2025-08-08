@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 vec_str_t zips;
 map_lump_t lumps;
 
-void lump_init(int argc, const char **argv) {
+void K_LumpInit(int argc, const char **argv) {
     SDL_Log("Init lumps");
 
     vec_init(&zips);
@@ -57,17 +57,17 @@ void lump_init(int argc, const char **argv) {
     }
 }
 
-void lump_shutdown() {
+void K_LumpShutdown() {
     SDL_Log("Shutdown lumps");
     vec_deinit(&zips);
     map_deinit(&lumps);
 }
 
-lump_t* lump_get(const char *name) {
+lump_t* K_LumpGet(const char *name) {
     return map_get(&lumps, name);
 }
 
-void lump_data(lump_t *lump, void *buffer) {
+void K_LumpData(lump_t *lump, void *buffer) {
     zip_t *z = zip_open(zips.data[lump->zip], ZIP_RDONLY, NULL);
     zip_file_t *zf = zip_fopen_index(z, lump->index, 0);
     zip_fread(zf, buffer, lump->size);

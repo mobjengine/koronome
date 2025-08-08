@@ -29,7 +29,7 @@ delta_t delta;
 SDL_Palette *playpal;
 
 int main(int argc, const char **argv) {
-    lump_init(argc, argv);
+    K_LumpInit(argc, argv);
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow("KORONOME", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
@@ -38,9 +38,9 @@ int main(int argc, const char **argv) {
     keyboard = SDL_GetKeyboardState(NULL);
 
     /*Loading playpal*/ {
-        lump_t *l = lump_get("playpal.pal");
+        lump_t *l = K_LumpGet("playpal.pal");
         Uint8 p[l->size];
-        lump_data(l, p);
+        K_LumpData(l, p);
 
         SDL_Color colors[256];
         int ci = 0;
@@ -54,7 +54,7 @@ int main(int argc, const char **argv) {
 
     K_WorldInit();
 
-    player_init();
+    K_PlayerInit();
 
     memset(&delta, 0, sizeof(delta_t));
     delta.now = SDL_GetPerformanceCounter();
@@ -73,12 +73,12 @@ int main(int argc, const char **argv) {
             }
         }
 
-        player_process();
+        K_PlayerProcess();
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         K_WorldRender2D();
-        player_render();
+        K_PlayerRender();
         SDL_RenderPresent(renderer);
     } while(!quit);
 
@@ -87,7 +87,7 @@ int main(int argc, const char **argv) {
     SDL_DestroyWindow(window);
     SDL_Quit();
     
-    lump_shutdown();
+    K_LumpShutdown();
 
     return EXIT_SUCCESS;
 }
