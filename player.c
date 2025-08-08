@@ -51,6 +51,15 @@ void player_process() {
 }
 
 void player_render() {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderDrawPointF(renderer, player.position.x, player.position.y);
+    SDL_Surface *s = SDL_LoadBMP("p.bmp");
+    SDL_Texture *t = SDL_CreateTextureFromSurface(renderer, s);
+    SDL_FRect dstrect = {
+        player.position.x,
+        player.position.y,
+        8,
+        8
+    };
+    SDL_RenderCopyExF(renderer, t, NULL, &dstrect, RAD_TO_DEG(player.angle), NULL, SDL_FLIP_NONE);
+    SDL_FreeSurface(s);
+    SDL_DestroyTexture(t);
 }

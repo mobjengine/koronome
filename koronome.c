@@ -39,7 +39,7 @@ int main(int argc, const char **argv) {
     do {
         delta.last = delta.now;
         delta.now = SDL_GetPerformanceCounter();
-        delta.time = (float)((delta.now - delta.last)*1000 / (float)SDL_GetPerformanceFrequency());
+        delta.time = (float)((delta.now - delta.last) / (float)SDL_GetPerformanceFrequency());
 
         while(SDL_PollEvent(&event)) {
             switch(event.type) {

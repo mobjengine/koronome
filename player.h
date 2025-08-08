@@ -20,12 +20,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <SDL.h>
 
-#define PLAYER_ROT_SPEED 1.0f
-#define PLAYER_MOVE_SPEED 1.0f
+#define PLAYER_ROT_SPEED (M_PI)
+#define PLAYER_MOVE_SPEED (M_PI * M_PI)
 
 typedef struct {
     SDL_FPoint position;
-    float angle; // rad
+    float angle;
 } player_t;
 
 extern player_t player;
