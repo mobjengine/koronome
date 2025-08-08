@@ -23,7 +23,8 @@ player_t player;
 
 void player_init() {
     memset(&player, 0, sizeof(player_t));
-    player.position = (SDL_FPoint){8,8};
+    player.position = (SDL_FPoint){3.5,3.5};
+    player.angle = DEG_TO_RAD(270.0f);
 }
 
 void player_process() {

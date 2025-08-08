@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <SDL.h>
 #include "koronome.h"
 #include "player.h"
+#include "world.h"
 
 SDL_Renderer *renderer;
 const Uint8 *keyboard;
@@ -53,6 +54,7 @@ int main(int argc, const char **argv) {
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+        world_render();
         player_render();
         SDL_RenderPresent(renderer);
     } while(!quit);
