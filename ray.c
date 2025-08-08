@@ -22,41 +22,84 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "koronome.h"
 
 ray_t castray(float angle) {
-    SDL_FPoint p = player.position;
+    float rayDirX = SDL_cosf(angle);
+    float rayDirY = SDL_sinf(angle);
 
-    SDL_FPoint d;
-    d.x = SDL_cosf(angle);
-    d.y = SDL_sinf(angle);
+    int mapX = (int)player.position.x;
+    int mapY = (int)player.position.y;
 
-    int i = 0;
-    while (1) {
-        int mapX = (int)p.x;
-        int mapY = (int)p.y;
+    float sideDistX;
+    float sideDistY;
+
+    float deltaDistX = fabsf(1.0f / rayDirX);
+    float deltaDistY = fabsf(1.0f / rayDirY);
+
+    int stepX;
+    int stepY;
+
+    int hit = 0;
+    int side = 0;
+
+    if (rayDirX < 0) {
+        stepX = -1;
+        sideDistX = (player.position.x - mapX) * deltaDistX;
+    } else {
+        stepX = 1;
+        sideDistX = (mapX + 1.0f - player.position.x) * deltaDistX;
+    }
+
+    if (rayDirY < 0) {
+        stepY = -1;
+        sideDistY = (player.position.y - mapY) * deltaDistY;
+    } else {
+        stepY = 1;
+        sideDistY = (mapY + 1.0f - player.position.y) * deltaDistY;
+    }
+
+    while (hit == 0) {
+        if (sideDistX < sideDistY) {
+            sideDistX += deltaDistX;
+            mapX += stepX;
+            side = 0;
+        } else {
+            sideDistY += deltaDistY;
+            mapY += stepY;
+            side = 1;
+        }
 
         if (mapX < 0 || mapX >= WORLD_WIDTH || mapY < 0 || mapY >= WORLD_HEIGHT)
             break;
 
         if (world[mapY * WORLD_WIDTH + mapX] != 0)
-            break;
-
-        p.x += d.x * 0.01f;
-        p.y += d.y * 0.01f;
-
-        i++;
-        if (i > 400) break;
+            hit = 1;
     }
 
+    float perpWallDist;
+    if (side == 0)
+        perpWallDist = (mapX - player.position.x + (1 - stepX) / 2) / rayDirX;
+    else
+        perpWallDist = (mapY - player.position.y + (1 - stepY) / 2) / rayDirY;
+
+    const float MIN_DISTANCE = 0.1f;
+    if (perpWallDist < MIN_DISTANCE) perpWallDist = MIN_DISTANCE;
+
+    float correctedDistance = perpWallDist * SDL_cosf(angle - player.angle);
+
     ray_t ray;
-    float dx = p.x - player.position.x;
-    float dy = p.y - player.position.y;
-    ray.distance = SDL_sqrtf(dx * dx + dy * dy); // primero se calcula
-    ray.wallheight = SCREEN_HEIGHT / ray.distance;
+    ray.distance = correctedDistance;
+    ray.wallheight = SCREEN_HEIGHT / correctedDistance;
+    const float MAX_WALL_HEIGHT = SCREEN_HEIGHT;
+    if (ray.wallheight > MAX_WALL_HEIGHT) ray.wallheight = MAX_WALL_HEIGHT;
+    ray.side = side;
+    ray.perpDist = perpWallDist;
+    ray.stepX = stepX;
+    ray.stepY = stepY;
 
     return ray;
 }
 
-void raycast(void) {
-    int num_rays = SCREEN_WIDTH; // un rayo por pixel
+void raycast(SDL_Surface *surface) {
+    int num_rays = SCREEN_WIDTH;
     float sliceWidth = (float)SCREEN_WIDTH / (float)num_rays;
     float angleStep = player.fov / (float)num_rays;
 
@@ -64,12 +107,19 @@ void raycast(void) {
         float rayAngle = player.angle - (player.fov / 2.0f) + i * angleStep;
         ray_t ray = castray(rayAngle);
 
-        // corrección de fisheye
-        ray.distance *= SDL_cosf(rayAngle - player.angle);
+        float wallX;
+        if (ray.side == 0)
+            wallX = player.position.y + ray.perpDist * SDL_sinf(rayAngle);
+        else
+            wallX = player.position.x + ray.perpDist * SDL_cosf(rayAngle);
 
-        ray.wallheight = SCREEN_HEIGHT / ray.distance;
-        if (ray.wallheight > SCREEN_HEIGHT) ray.wallheight = SCREEN_HEIGHT;
+        wallX -= SDL_floorf(wallX);
 
-        draw_wall_slice(i, ray.wallheight, sliceWidth);
+        int texX = (int)(wallX * (float)surface->w);
+
+        if (ray.side == 0 && ray.stepX > 0) texX = surface->w - texX - 1;
+        if (ray.side == 1 && ray.stepY < 0) texX = surface->w - texX - 1;
+
+        draw_wall_slice(i, ray.wallheight, sliceWidth, surface, texX);
     }
 }

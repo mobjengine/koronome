@@ -23,7 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 typedef struct {
     float distance;
     float wallheight;
+    SDL_bool side;
+    float perpDist;
+    int stepX;
+    int stepY;
 } ray_t;
 
 ray_t castray(float angle);
-void raycast(void);
+void raycast(SDL_Surface *surface);

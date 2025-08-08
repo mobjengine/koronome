@@ -40,4 +40,5 @@ extern SDL_Renderer *renderer;
 extern const Uint8 *keyboard;
 extern delta_t delta;
 
-void draw_wall_slice(int i, float wallHeight, float sliceWidth);
+void draw_wall_slice(int x, float wallHeight, float sliceWidth, SDL_Surface *surface, int texX);
+SDL_Surface* K_CreateSurfaceFromMemory(const void* data, size_t size);

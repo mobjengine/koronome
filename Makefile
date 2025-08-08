@@ -1,6 +1,6 @@
 CC	=	gcc
 CFLAGS	=	-std=gnu99 $(shell pkg-config --cflags sdl2)
-LIBS	=	$(shell pkg-config --libs sdl2)
+LIBS	=	$(shell pkg-config --libs sdl2) -lSDL2_image
 EXE	=	koronome
 OBJS	=	\
 	koronome.o	\

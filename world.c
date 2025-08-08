@@ -29,7 +29,7 @@ Uint8 world[WORLD_WIDTH * WORLD_HEIGHT] = {
 };
 
 void world_render() {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     for(int x = 0;x < WORLD_WIDTH;x++) {
         for(int y = 0;y < WORLD_HEIGHT;y++) {
             SDL_Rect dstrect = {
@@ -40,7 +40,7 @@ void world_render() {
             };
 
             if(world[y * WORLD_WIDTH + x])
-            SDL_RenderDrawRect(renderer, &dstrect);
+            SDL_RenderFillRect(renderer, &dstrect);
         }
     }
 }

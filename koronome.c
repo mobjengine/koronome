@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include <SDL.h>
+#include <SDL_image.h>
 #include "koronome.h"
 #include "player.h"
 #include "world.h"
@@ -51,6 +52,15 @@ int main(int argc, const char **argv) {
         playpal = SDL_AllocPalette(256);
         SDL_SetPaletteColors(playpal, colors, 0, 256);
     }
+
+    /*Loading BRICK*/
+    SDL_Surface *BRICK; {
+        lump_t *l = wad_get("BRICK");
+        Uint8 f[l->size];
+        wad_data(l, f);
+
+        BRICK = K_CreateSurfaceFromMemory(f, l->size);
+    }
     
     player_init();
 
@@ -75,7 +85,7 @@ int main(int argc, const char **argv) {
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        raycast();
+        raycast(BRICK);
         world_render();
         player_render();
         SDL_RenderPresent(renderer);
@@ -92,17 +102,49 @@ int main(int argc, const char **argv) {
     return 0;
 }
 
-void draw_wall_slice(int x, float wallHeight, float sliceWidth) {
-    int startY = (SCREEN_HEIGHT / 2) - (wallHeight / 2);
+void draw_wall_slice(int x, float wallHeight, float sliceWidth, SDL_Surface *surface, int texX) {
+    int startY = (SCREEN_HEIGHT / 2) - (int)(wallHeight / 2);
     if (startY < 0) startY = 0;
+    int endY = startY + (int)wallHeight;
+    if (endY > SCREEN_HEIGHT) endY = SCREEN_HEIGHT;
 
-    SDL_Rect rect = {
-        .x = x * (int)sliceWidth,
-        .y = startY,
-        .w = (int)sliceWidth,
-        .h = wallHeight
-    };
+    int texWidth = surface->w;
+    int texHeight = surface->h;
 
-    SDL_SetRenderDrawColor(renderer, 180, 0, 180, 255);
-    SDL_RenderFillRect(renderer, &rect);
+    if (texX < 0) texX = 0;
+    if (texX >= texWidth) texX = texWidth - 1;
+
+    Uint8 *pixels = (Uint8 *)surface->pixels;
+    SDL_Palette *palette = surface->format->palette;
+
+    for (int y = startY; y < endY; y++) {
+        int d = (y - startY) * texHeight / (int)wallHeight;
+        int texY = d;
+
+        if (texY < 0) texY = 0;
+        if (texY >= texHeight) texY = texHeight - 1;
+
+        Uint8 pixel_index = pixels[texY * surface->pitch + texX];
+        SDL_Color color = palette->colors[pixel_index];
+
+        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+
+        SDL_Rect pixelRect = { x, y, (int)sliceWidth, 1 };
+        SDL_RenderFillRect(renderer, &pixelRect);
+    }
+}
+
+SDL_Surface* K_CreateSurfaceFromMemory(const void* data, size_t size) {
+    SDL_RWops* rw = SDL_RWFromConstMem(data, (int)size);
+    if (!rw) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_RWFromConstMem failed: %s", SDL_GetError());
+        return NULL;
+    }
+    SDL_Surface* surface = IMG_Load_RW(rw, 1);
+    if (!surface) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load_RW failed: %s", SDL_GetError());
+        return NULL;
+    }
+    SDL_SetSurfacePalette(surface, playpal);
+    return surface;
 }

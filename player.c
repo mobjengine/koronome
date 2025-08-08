@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "player.h"
 #include "koronome.h"
+#include "world.h"
 
 player_t player;
 
@@ -29,6 +30,21 @@ void player_init() {
 }
 
 void player_process() {
+    float dx = 0.0f;
+    float dy = 0.0f;
+    float moveSpeed = PLAYER_MOVE_SPEED * delta.time;
+
+    if (keyboard[SDL_SCANCODE_W]) {
+        dx += SDL_cosf(player.angle) * moveSpeed;
+        dy += SDL_sinf(player.angle) * moveSpeed;
+    }
+    if (keyboard[SDL_SCANCODE_S]) {
+        dx -= SDL_cosf(player.angle) * moveSpeed;
+        dy -= SDL_sinf(player.angle) * moveSpeed;
+    }
+
+    player_move(dx, dy);
+
     if (keyboard[SDL_SCANCODE_A]) {
         player.angle -= PLAYER_ROT_SPEED * delta.time;
     }
@@ -38,18 +54,6 @@ void player_process() {
 
     if (player.angle < 0) player.angle += TAU;
     else if (player.angle >= TAU) player.angle -= TAU;
-
-    float dx = SDL_cosf(player.angle);
-    float dy = SDL_sinf(player.angle);
-
-    if (keyboard[SDL_SCANCODE_W]) {
-        player.position.x += dx * PLAYER_MOVE_SPEED * delta.time;
-        player.position.y += dy * PLAYER_MOVE_SPEED * delta.time;
-    }
-    if (keyboard[SDL_SCANCODE_S]) {
-        player.position.x -= dx * PLAYER_MOVE_SPEED * delta.time;
-        player.position.y -= dy * PLAYER_MOVE_SPEED * delta.time;
-    }
 }
 
 void player_render() {
@@ -64,4 +68,25 @@ void player_render() {
     SDL_RenderCopyExF(renderer, t, NULL, &dstrect, RAD_TO_DEG(player.angle), NULL, SDL_FLIP_NONE);
     SDL_FreeSurface(s);
     SDL_DestroyTexture(t);
+}
+
+void player_move(float dx, float dy) {
+    float newX = player.position.x + dx;
+    float newY = player.position.y + dy;
+
+    int mapX = (int)newX;
+    int mapY = (int)player.position.y;
+    if (mapX >= 0 && mapX < WORLD_WIDTH && mapY >= 0 && mapY < WORLD_HEIGHT) {
+        if (world[mapY * WORLD_WIDTH + mapX] == 0) {
+            player.position.x = newX;
+        }
+    }
+
+    mapX = (int)player.position.x;
+    mapY = (int)newY;
+    if (mapX >= 0 && mapX < WORLD_WIDTH && mapY >= 0 && mapY < WORLD_HEIGHT) {
+        if (world[mapY * WORLD_WIDTH + mapX] == 0) {
+            player.position.y = newY;
+        }
+    }
 }

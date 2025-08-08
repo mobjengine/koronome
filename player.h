@@ -34,3 +34,4 @@ extern player_t player;
 void player_init();
 void player_process();
 void player_render();
+void player_move(float dx, float dy);
