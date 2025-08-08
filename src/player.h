@@ -1,5 +1,5 @@
 /*
-An isometric game
+A retro-styled horror FPS with graphic violence and survival elements.
 Copyright (C) 2025  mobjengine
 
 This program is free software: you can redistribute it and/or modify
