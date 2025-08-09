@@ -23,6 +23,8 @@ std::vector<std::string> zips;
 std::map<std::string, lump_t> lumps;
 
 void K_LumpInit(int argc, const char **argv) {
+    K_LogInfo("K_LumpInit(): Init lumps");
+
     zips.push_back("koronome.pk3");
 
     for(int i = 0;i < argc;i++) {
@@ -47,6 +49,8 @@ void K_LumpInit(int argc, const char **argv) {
 
         zip_close(z);
         zip_i++;
+
+        K_LogInfo("K_LumpInit(): Adding %s (%d lumps)", zip.c_str(), total);
     }
 }
 

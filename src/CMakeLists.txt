@@ -11,4 +11,5 @@ target_link_libraries(
     koronome PRIVATE
     sfml-graphics sfml-window sfml-system
     zip
+    m
 )
