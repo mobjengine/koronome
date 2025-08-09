@@ -18,14 +18,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <SDL.h>
+#include <zip.h>
+#include <vector>
+#include <map>
+#include <string>
 
 typedef struct {
-    SDL_FPoint position;
-} player_t;
+    zip_uint64_t index;
+    zip_uint64_t size;
+    uint8_t zip;
 
-extern player_t player;
+    void data(void *buffer);
+} lump_t;
 
-void K_PlayerInit();
-void K_PlayerProcess();
-void K_PlayerRender();
+extern std::vector<std::string> zips;
+extern std::map<std::string, lump_t> lumps;
+
+void K_LumpInit(int argc, const char **argv);

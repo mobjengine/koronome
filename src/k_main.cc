@@ -16,25 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "k_main.hh"
+#include "k_lump.hh"
 
-#include <SDL.h>
-#include <zip.h>
-#include "rxi/vec.h"
-#include "rxi/map.h"
+int main(int argc, const char **argv) {
+    K_LumpInit(argc, argv);
 
-typedef struct {
-    zip_uint64_t index;
-    zip_uint64_t size;
-    Uint8 zip;
-} lump_t;
-
-typedef map_t(lump_t) map_lump_t;
-
-extern vec_str_t zips;
-extern map_lump_t lumps;
-
-void K_LumpInit(int argc, const char **argv);
-void K_LumpShutdown();
-lump_t* K_LumpGet(const char *name);
-void K_LumpData(lump_t *lump, void *buffer);
+    return EXIT_SUCCESS;
+}

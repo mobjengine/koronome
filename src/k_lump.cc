@@ -16,30 +16,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "k_lump.h"
-#include "k_main.h"
+#include "k_lump.hh"
+#include "k_main.hh"
 
-vec_str_t zips;
-map_lump_t lumps;
+std::vector<std::string> zips;
+std::map<std::string, lump_t> lumps;
 
 void K_LumpInit(int argc, const char **argv) {
-    SDL_Log("Init lumps");
-
-    vec_init(&zips);
-    map_init(&lumps);
-
-    vec_push(&zips, "koronome.pk3");
+    zips.push_back("koronome.pk3");
 
     for(int i = 0;i < argc;i++) {
         if(CSTR_ENDS_WITH(argv[i], ".pk3")) {
-            vec_push(&zips, argv[i]);
+            zips.push_back(argv[i]);
         }
     }
 
-    int zip_i;
-    const char *zip_s;
-    vec_foreach(&zips, zip_s, zip_i) {
-        zip_t *z = zip_open(zip_s, ZIP_RDONLY, NULL);
+    uint8_t zip_i = 0;
+    for(std::string zip : zips) {
+        zip_t *z = zip_open(zip.c_str(), ZIP_RDONLY, NULL);
         zip_uint64_t ze = zip_get_num_entries(z, 0);
         zip_uint64_t total = 0;
 
@@ -47,30 +41,19 @@ void K_LumpInit(int argc, const char **argv) {
             zip_stat_t st;
             zip_stat_index(z, i, 0, &st);
             if(CSTR_ENDS_WITH(st.name, "/")) continue;
-            map_set(&lumps, st.name, ((lump_t){st.index, st.size, zip_i}));
+            lumps[st.name] = (lump_t){st.index, st.size, zip_i};
             total++;
         }
 
         zip_close(z);
-
-        SDL_Log("Adding %s (%ld lumps)", zip_s, total);
+        zip_i++;
     }
 }
 
-void K_LumpShutdown() {
-    SDL_Log("Shutdown lumps");
-    vec_deinit(&zips);
-    map_deinit(&lumps);
-}
-
-lump_t* K_LumpGet(const char *name) {
-    return map_get(&lumps, name);
-}
-
-void K_LumpData(lump_t *lump, void *buffer) {
-    zip_t *z = zip_open(zips.data[lump->zip], ZIP_RDONLY, NULL);
-    zip_file_t *zf = zip_fopen_index(z, lump->index, 0);
-    zip_fread(zf, buffer, lump->size);
+void lump_t::data(void *buffer) {
+    zip_t *z = zip_open(zips[zip].c_str(), ZIP_RDONLY, NULL);
+    zip_file_t *zf = zip_fopen_index(z, index, 0);
+    zip_fread(zf, buffer, size);
     zip_fclose(zf);
     zip_close(z);
 }
