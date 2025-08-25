@@ -1,5 +1,5 @@
 CC	=	gcc
-CFLAGS	=	-std=c99 $(shell pkg-config --cflags sdl2)
+CFLAGS	=	-std=c99 -MMD -MP $(shell pkg-config --cflags sdl2)
 LIBS	=	-lzip -lm $(shell pkg-config --libs sdl2)
 EXE	=	koronome
 OBJS	=	\
@@ -9,6 +9,7 @@ OBJS	=	\
 	k_world.o	\
 	k_lump.o	\
 	k_playpal.o
+DEPS = $(OBJS:.o=.d)
 
 all:	$(EXE)
 
@@ -23,3 +24,4 @@ $(EXE):	$(OBJS)
 
 %.o:	%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
+-include $(DEPS)
