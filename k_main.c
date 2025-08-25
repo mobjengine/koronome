@@ -19,18 +19,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "k_main.h"
 #include "k_world.h"
 #include "k_lump.h"
+#include "k_playpal.h"
 
 SDL_Renderer *renderer;
 
 int main(int argc, const char **argv) {
-    K_LumpInit(argc, argv);
-
-    K_WorldInit();
-
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow("KORONOME", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    K_LumpInit(argc, argv);
+    K_PlaypalInit();
+    K_WorldInit();
 
     SDL_Event event;
     SDL_bool quit = SDL_FALSE;
@@ -50,11 +51,12 @@ int main(int argc, const char **argv) {
         quit = SDL_TRUE;
     } while(!quit);
 
+    K_PlaypalShutdown();
+    K_LumpShutdown();
+
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-
-    K_LumpShutdown();
 
     return EXIT_SUCCESS;
 };

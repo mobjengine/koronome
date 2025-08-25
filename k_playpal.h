@@ -16,24 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "k_main.h"
-#include "k_world.h"
+#pragma once
 
-Uint8 world[WORLD_WIDTH * WORLD_HEIGHT];
+#include <SDL.h>
 
-void K_WorldInit() {
-    memset(world, 0, sizeof(world));
-}
+extern SDL_Palette *playpal;
 
-void K_WorldRender2D() {
-    for(int x = 0;x < WORLD_WIDTH;x++) {
-        for(int y = 0;y < WORLD_HEIGHT;y++) {
-            if(world[INDEX_2D(x,y,WORLD_WIDTH)]) {
-                SDL_Rect rect = {x*8,y*8,8,8};
-
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-                SDL_RenderFillRect(renderer, &rect);
-            }
-        }
-    }
-}
+void K_PlaypalInit();
+void K_PlaypalShutdown();

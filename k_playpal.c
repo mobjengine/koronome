@@ -16,24 +16,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "k_main.h"
-#include "k_world.h"
+#include "k_playpal.h"
+#include "k_lump.h"
 
-Uint8 world[WORLD_WIDTH * WORLD_HEIGHT];
+SDL_Palette *playpal;
 
-void K_WorldInit() {
-    memset(world, 0, sizeof(world));
+void K_PlaypalInit() {
+    SDL_Color colors[256];
+    playpal = SDL_AllocPalette(256);
+    
+    const lump_t *l = K_LumpGet("playpal.pal");
+    uint8_t d[l->size];
+    K_LumpData(l, d);
+
+    for(int i = 0;i < 256;i++) {
+        colors[i].r = d[(i*3)+0];
+        colors[i].g = d[(i*3)+1];
+        colors[i].b = d[(i*3)+2];
+        colors[i].a = 255;
+    }
+
+    SDL_SetPaletteColors(playpal, colors, 0, 256);
 }
 
-void K_WorldRender2D() {
-    for(int x = 0;x < WORLD_WIDTH;x++) {
-        for(int y = 0;y < WORLD_HEIGHT;y++) {
-            if(world[INDEX_2D(x,y,WORLD_WIDTH)]) {
-                SDL_Rect rect = {x*8,y*8,8,8};
-
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-                SDL_RenderFillRect(renderer, &rect);
-            }
-        }
-    }
+void K_PlaypalShutdown() {
+    SDL_FreePalette(playpal);
 }

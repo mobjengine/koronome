@@ -1,5 +1,5 @@
 CC	=	gcc
-CFLAGS	=	-std=c99 -Wall $(shell pkg-config --cflags sdl2)
+CFLAGS	=	-std=c99 $(shell pkg-config --cflags sdl2)
 LIBS	=	-lzip -lm $(shell pkg-config --libs sdl2)
 EXE	=	koronome
 OBJS	=	\
@@ -7,7 +7,8 @@ OBJS	=	\
 	rxi_vec.o	\
 	k_main.o	\
 	k_world.o	\
-	k_lump.o
+	k_lump.o	\
+	k_playpal.o
 
 all:	$(EXE)
 
