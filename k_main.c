@@ -16,13 +16,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <SDL.h>
 #include "k_main.h"
+#include "k_world.h"
+
+SDL_Renderer *renderer;
 
 int main(int argc, const char **argv) {
+    K_WorldInit();
+
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow("KORONOME", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     SDL_Event event;
     SDL_bool quit = SDL_FALSE;
@@ -35,7 +40,11 @@ int main(int argc, const char **argv) {
             }
         }
 
+        K_WorldRender2D();
         SDL_RenderPresent(renderer);
+
+        SDL_Delay(1000);
+        quit = SDL_TRUE;
     } while(!quit);
 
     SDL_DestroyRenderer(renderer);

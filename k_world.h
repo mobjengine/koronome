@@ -20,8 +20,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <SDL.h>
 
-#define SCREEN_WIDTH (320)
-#define SCREEN_HEIGHT (200)
-#define INDEX_2D(x, y, width) ((y) * (width) + (x))
+#define WORLD_WIDTH (40)
+#define WORLD_HEIGHT (25)
 
-extern SDL_Renderer *renderer;
+extern Uint8 world[WORLD_WIDTH * WORLD_HEIGHT];
+
+void K_WorldInit();
+void K_WorldRender2D();
