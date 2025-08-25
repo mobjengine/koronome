@@ -18,10 +18,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "k_main.h"
 #include "k_world.h"
+#include "k_lump.h"
 
 SDL_Renderer *renderer;
 
 int main(int argc, const char **argv) {
+    K_LumpInit(argc, argv);
+
     K_WorldInit();
 
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -50,6 +53,8 @@ int main(int argc, const char **argv) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+    K_LumpShutdown();
 
     return EXIT_SUCCESS;
 };

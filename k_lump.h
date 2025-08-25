@@ -19,14 +19,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
 
 #include <SDL.h>
-#include <string.h>
-#include <stdbool.h>
+#include <zip.h>
+#include "rxi_map.h"
+#include "rxi_vec.h"
 
-#define SCREEN_WIDTH (320)
-#define SCREEN_HEIGHT (200)
-#define INDEX_2D(x, y, width) ((y) * (width) + (x))
-#define CSTR_ENDS_WITH(str, suffix) \
-    ((strlen(str) >= strlen(suffix)) && \
-     (strcmp((str) + strlen(str) - strlen(suffix), (suffix)) == 0))
+typedef struct {
+    zip_uint64_t index;
+    zip_uint64_t size;
+    Uint8 zip;
+} lump_t;
 
-extern SDL_Renderer *renderer;
+typedef map_t(lump_t) map_lump_t;
+
+extern map_lump_t lumps;
+extern vec_str_t zkds;
+
+void K_LumpInit(int argc, const char **argv);
+void K_LumpShutdown();
+const lump_t* K_LumpGet(const char *key);
+void K_LumpData(const lump_t *lump, void *buffer);

@@ -1,15 +1,21 @@
 CC	=	gcc
-CFLAGS	=	-std=gnu99 -Wall $(shell pkg-config --cflags sdl2)
-LIBS	=	$(shell pkg-config --libs sdl2)
+CFLAGS	=	-std=c99 -Wall $(shell pkg-config --cflags sdl2)
+LIBS	=	-lzip -lm $(shell pkg-config --libs sdl2)
 EXE	=	koronome
 OBJS	=	\
+	rxi_map.o	\
+	rxi_vec.o	\
 	k_main.o	\
-	k_world.o
+	k_world.o	\
+	k_lump.o
 
 all:	$(EXE)
 
 clean:
 	rm -f $(OBJS)
+
+koronome.zkd:
+	cd koronome.zkd.dir && zip -9 ../koronome.zkd *
 
 $(EXE):	$(OBJS)
 	$(CC) $(CFLAGS) -o $(EXE) $(OBJS) $(LIBS)
